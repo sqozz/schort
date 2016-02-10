@@ -11,7 +11,7 @@ def short(shortLink=""):
 		c = conn.cursor()
 		result = c.execute('SELECT * FROM links WHERE shortLink=?', (shortLink, )).fetchone()
 		if result:
-			return redirect(result[1], code=302) # Redirect to long URL saved in the database
+			return redirect(result[1], code=301) # Redirect to long URL saved in the database
 		else:
 			message = ""
 			if len(shortLink) > 0:
