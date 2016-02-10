@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>geekify.de</title>
+			<link rel="stylesheet" href="static/css/index.css">
+	</head>
+	<body>
+		<div id="main">
+			<div id="message" class="{{message_type}}">
+				{{message}}
+			</div>
+			<form action="/" method="post" id="short_form">
+				<span id="url_text">URL:</span>
+				<input type="input" name="url" id="url_input">
+				<input type="hidden" name="wishId" value="{{name}}">
+				<input type="submit" value="Short!" id="short_button">
+			</form>
+		</div>
+	</body>
+</html>

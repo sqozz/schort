@@ -1,0 +1,56 @@
+html, body {
+	height: 100%;
+	width: 100%;
+	margin: 0px;
+}
+
+body {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+#main {
+	width: 40%;
+}
+
+#url_input {
+	border: 1px solid rgb(200, 200, 200);
+	height: 35px;
+	margin: 0px;
+	padding-left: 10px;
+	flex: 1;
+}
+
+#short_button {
+	border: 1px solid rgb(200, 200, 200);
+	height: 35px;
+	margin: 0px;
+	margin-left: 10px;
+}
+
+#short_form {
+	font-family: "monospace";
+	font-size: 30px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+#url_text {
+	margin-right: 10px;
+}
+
+#message {
+	text-align: center;
+	margin-bottom: 5px;
+	word-wrap: break-word;
+}
+
+.error {
+	color: red;
+}
+
+.info {
+	color: #848400;
+}
