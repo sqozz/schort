@@ -28,7 +28,7 @@ def short(shortLink=""):
 
 def insertIdUnique(idToCheck, longUrl):
 	hashUrl = hashlib.sha256(longUrl.encode()).digest()
-	base64Url = base64.b64encode(hashUrl).decode()
+	base64Url = base64.urlsafe_b64encode(hashUrl).decode()
 	if len(idToCheck) == 0:
 		idToCheck = base64Url[:4]
 
