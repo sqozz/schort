@@ -1,7 +1,7 @@
 # schort - It's just is a tiny link shortener
 ## Installation instructions:
 1. Clone this repo into e.g. /opt/schort
-2. Create a "data" folder inside the repo which is writable by the webserver
+2. Create a user and adjust permissions to write at least into /opt/schort/data
 2. Install requirements (see below)
 3. Configure your wsgi or fcgi server
 4. Configure your webserver that he talks to your wsgi/fcgi server
