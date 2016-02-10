@@ -7,7 +7,7 @@ app = Flask(__name__)
 @app.route('/<shortLink>', methods=['GET', 'POST'])
 def short(shortLink=""):
 	if request.method == "GET":
-		conn = sqlite3.connect("links.sqlite")
+		conn = sqlite3.connect("data/links.sqlite")
 		c = conn.cursor()
 		result = c.execute('SELECT * FROM links WHERE shortLink=?', (shortLink, )).fetchone()
 		if result:
@@ -32,7 +32,7 @@ def insertIdUnique(idToCheck, longUrl):
 	if len(idToCheck) == 0:
 		idToCheck = base64Url[:4]
 
-	conn = sqlite3.connect("links.sqlite")
+	conn = sqlite3.connect("data/links.sqlite")
 	c = conn.cursor()
 	try:
 		c.execute('INSERT INTO links VALUES (?, ?, ?, ?, ?)', (idToCheck, longUrl, int(time.time()), request.remote_addr, "default" ))
@@ -60,7 +60,7 @@ def insertIdUnique(idToCheck, longUrl):
 	return databaseId
 
 def initDB():
-	conn = sqlite3.connect("links.sqlite")
+	conn = sqlite3.connect("data/links.sqlite")
 	c = conn.cursor()
 	c.execute('''CREATE TABLE IF NOT EXISTS links (shortLink UNIQUE NOT NULL, longLink, timestamp, ip, redirectMethod);''')
 	conn.commit()
