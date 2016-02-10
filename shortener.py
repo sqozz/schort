@@ -13,7 +13,10 @@ def short(shortLink=""):
 		if result:
 			return redirect(result[1], code=302) # Redirect to long URL saved in the database
 		else:
-				return render_template("index.html", name=shortLink, message="Enter long URL for "+ request.url_root + shortLink+":", message_type="info") # Does the user wish to create a personel short link?
+			message = ""
+			if len(shortLink) > 0:
+				message = "Enter long URL for "+ request.url_root + shortLink+":"
+			return render_template("index.html", name=shortLink, message=message, message_type="info") # Does the user wish to create a personel short link?
 	elif request.method == "POST": # Someone submitted a new link to short
 		wishId = request.form["wishId"]
 		longUrl = request.form["url"]
@@ -24,8 +27,8 @@ def short(shortLink=""):
 		return request.url_root + databaseId # TODO: Give the user a nice site where he can see his short URL
 
 def insertIdUnique(idToCheck, longUrl):
-	hashUrl = hashlib.sha256(longUrl.encode()).hexdigest()
-	base64Url = base64.b64encode(hashUrl.encode()).decode()
+	hashUrl = hashlib.sha256(longUrl.encode()).digest()
+	base64Url = base64.b64encode(hashUrl).decode()
 	if len(idToCheck) == 0:
 		idToCheck = base64Url[:4]
 
