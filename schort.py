@@ -9,28 +9,29 @@ app = Flask(__name__)
 @app.route('/<shortLink>', methods=['GET', 'POST'])
 def short(shortLink=""):
 	if request.method == "GET":
-		conn = sqlite3.connect("data/links.sqlite")
-		c = conn.cursor()
-		result = c.execute('SELECT * FROM links WHERE shortLink=?', (shortLink, )).fetchone()
-		if result:
-			url = result[1]
-			parsedUrl = urlparse(url)
-			if parsedUrl.scheme == "":
-				url = "http://" + url
-			return redirect(url, code=301) # Redirect to long URL saved in the database
+		if shortLink:
+			conn = sqlite3.connect("data/links.sqlite")
+			c = conn.cursor()
+			result = c.execute('SELECT * FROM links WHERE shortLink=?', (shortLink, )).fetchone()
+			conn.close()
+			if result:
+				url = result[1]
+				parsedUrl = urlparse(url)
+				if parsedUrl.scheme == "":
+					url = "http://" + url
+				return redirect(url, code=301) # Redirect to long URL saved in the database
+			else:
+				return render_template("index.html", name=shortLink, message="Enter long URL for "+ request.url_root + shortLink+":", message_type="info") # Custom link page
 		else:
-			message = ""
-			if len(shortLink) > 0:
-				message = "Enter long URL for "+ request.url_root + shortLink+":"
-			return render_template("index.html", name=shortLink, message=message, message_type="info") # Does the user wish to create a personel short link?
+			return render_template("index.html", name=shortLink) # Landing page
 	elif request.method == "POST": # Someone submitted a new link to short
 		wishId = request.form["wishId"]
 		longUrl = request.form["url"]
-		if not wishId:
-			databaseId = insertIdUnique("", longUrl)
-		else:
+		if wishId:
 			databaseId = insertIdUnique(wishId, longUrl)
-		return request.url_root + databaseId # TODO: Give the user a nice site where he can see his short URL
+		else:
+			databaseId = insertIdUnique("", longUrl)
+		return request.url_root + databaseId # Short link in plain text
 
 def insertIdUnique(idToCheck, longUrl):
 	hashUrl = hashlib.sha256(longUrl.encode()).digest()
