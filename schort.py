@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 from flask import Flask, render_template, url_for, request, redirect, abort
 import sqlite3, random, string, time, hashlib, base64
+from urllib.parse import urlparse
+
 app = Flask(__name__)
 
 @app.route('/', methods=['GET', 'POST'])
@@ -11,7 +13,11 @@ def short(shortLink=""):
 		c = conn.cursor()
 		result = c.execute('SELECT * FROM links WHERE shortLink=?', (shortLink, )).fetchone()
 		if result:
-			return redirect(result[1], code=301) # Redirect to long URL saved in the database
+			url = result[1]
+			parsedUrl = urlparse(url)
+			if parsedUrl.scheme == "":
+				url = "http://" + url
+			return redirect(url, code=301) # Redirect to long URL saved in the database
 		else:
 			message = ""
 			if len(shortLink) > 0:
@@ -65,9 +71,7 @@ def initDB():
 	c.execute('''CREATE TABLE IF NOT EXISTS links (shortLink UNIQUE NOT NULL, longLink, timestamp, ip, redirectMethod);''')
 	conn.commit()
 	conn.close()
-	print("DB init")
 
 if __name__ == '__main__':
 	initDB()
-#	app.run(debug=True)
-	app.run(debug=False)
+	app.run(debug=True) # If you call this file directly it will always run in debug mode. THIS IS VERY DANGEROUS!
