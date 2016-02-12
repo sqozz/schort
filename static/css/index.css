@@ -8,6 +8,7 @@ body {
 	display: flex;
 	justify-content: center;
 	align-items: center;
+	font-family: monospace;
 }
 
 #main {
@@ -27,10 +28,10 @@ body {
 	height: 35px;
 	margin: 0px;
 	margin-left: 10px;
+	font-family: monospace;
 }
 
 #short_form {
-	font-family: "monospace";
 	font-size: 30px;
 	display: flex;
 	justify-content: center;
@@ -53,4 +54,28 @@ body {
 
 .info {
 	color: #848400;
+}
+
+#infobar {
+	display: flex;
+	margin-top: 10px;
+}
+
+a {
+	color: rgb(150, 150, 150);
+}
+
+a:hover {
+	color: black;
+}
+
+.infoitem {
+	flex: 1;
+	display: flex;
+	justify-content: center;
+	border-right: 1px solid #cfcfcf;
+}
+
+.infoitem:last-child {
+	border-right: none;
 }
