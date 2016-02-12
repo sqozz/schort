@@ -8,18 +8,27 @@ app = Flask(__name__)
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/<shortLink>', methods=['GET', 'POST'])
 def short(shortLink=""):
+	print("resolve" in request.args)
 	if request.method == "GET":
 		if shortLink:
+			noauto = shortLink[-1] == "+"
+			if noauto: shortLink = shortLink[:-1]
 			conn = sqlite3.connect("data/links.sqlite")
 			c = conn.cursor()
-			result = c.execute('SELECT * FROM links WHERE shortLink=?', (shortLink, )).fetchone()
+			result = c.execute('SELECT longLink FROM links WHERE shortLink=?', (shortLink, )).fetchone()
 			conn.close()
 			if result:
-				url = result[1]
+				url = result[0]
 				parsedUrl = urlparse(url)
 				if parsedUrl.scheme == "":
 					url = "http://" + url
-				return redirect(url, code=301) # Redirect to long URL saved in the database
+				if "resolve" in request.args:
+					return url
+				else:
+					if noauto:
+						return "<a href=" + url + ">" + url + "</a>"
+					else:
+						return redirect(url, code=301) # Redirect to long URL saved in the database
 			else:
 				return render_template("index.html", name=shortLink, message="Enter long URL for "+ request.url_root + shortLink+":", message_type="info") # Custom link page
 		else:
