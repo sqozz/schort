@@ -8,7 +8,6 @@ app = Flask(__name__)
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/<shortLink>', methods=['GET', 'POST'])
 def short(shortLink=""):
-	print("resolve" in request.args)
 	if request.method == "GET":
 		if shortLink:
 			noauto = shortLink[-1] == "+"

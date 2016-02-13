@@ -63,10 +63,13 @@ body {
 
 a {
 	color: rgb(150, 150, 150);
+	display: block;
+	text-decoration: none;
 }
 
 a:hover {
 	color: black;
+	text-decoration: underline;
 }
 
 .infoitem {
@@ -78,4 +81,70 @@ a:hover {
 
 .infoitem:last-child {
 	border-right: none;
+}
+
+span .description {
+	color: black;
+	display: none;
+	opacity: 0;
+	text-align: left;
+	margin-left: -100px;
+	max-width: 300px;
+	margin-top: 10px;
+	padding: 3px;
+	box-shadow: 3px 3px 10px gray;
+	max-height: 33%;
+	overflow-y: auto;
+}
+
+a:focus .description {
+	position: absolute;
+	display: inline;
+	opacity: 1;
+	background-color: white;
+	pointer-events: auto;
+}
+
+a:focus {
+	pointer-events: none;
+}
+
+ol, ul {
+	padding-left: 15px;
+	margin-top: 0px;
+	margin-bottom: 5px;
+}
+
+.description li {
+	font-weight: bold;
+}
+
+.description li + div {
+	margin-left: 3px;
+	margin-right: 5px;
+}
+
+.description {
+	background:
+		/* Shadow covers */
+		linear-gradient(white 30%, rgba(255,255,255,0)),
+		linear-gradient(rgba(255,255,255,0), white 70%) 0 100%,
+	
+		/* Shadows */
+		radial-gradient(50% 0, farthest-side, rgba(0,0,0,.3), rgba(0,0,0,0)),
+		radial-gradient(50% 100%,farthest-side, rgba(0,0,0,.3), rgba(0,0,0,0)) 0 100%;
+
+	background:
+		/* Shadow covers */
+		linear-gradient(white 30%, rgba(255,255,255,0)),
+		linear-gradient(rgba(255,255,255,0), white 70%) 0 100%,
+		
+		/* Shadows */
+		radial-gradient(farthest-side at 50% 0, rgba(0,0,0,.3), rgba(0,0,0,0)),
+		radial-gradient(farthest-side at 50% 100%, rgba(0,0,0,.3), rgba(0,0,0,0)) 0 100%;
+	background-repeat: no-repeat;
+	background-color: white;
+	background-size: 100% 40px, 100% 40px, 100% 14px, 100% 14px;
+	
+	background-attachment: local, local, scroll, scroll;
 }

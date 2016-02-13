@@ -17,8 +17,33 @@
 				<input type="submit" value="Schort!" id="short_button">
 			</form>
 			<div id="infobar">
-				<span class="infoitem"><a href="#">API</a></span>
-				<span class="infoitem"><a href="#">FAQ</a></span>
+				<span class="infoitem">
+					<a href="">
+						<div class="link">API</div>
+						<div class="description">
+							There is no dedicated API for schort. Just make a POST-request to / with the parameter "url" set to your desired destination. Schort will generate an id for your and gives back the short link in plain text.
+							<br/><br/>
+							If you wish to create a custom URL with your script, you can also set the parameter "wishId". If the requested id is free, schort will print out the short link with your requested id. If not, schort will just generate one and print that one out.
+							<br/><br/>
+							To resolve a link you just have to call the short url appendet by an plus sign ("+"). This makes schort to print out a plain text string of the original URL.
+						</div>
+					</a>
+				</span>
+				<span class="infoitem">
+					<a href="">
+						<div class="link">FAQ</div>
+						<div class="description">
+							<ul>
+								<li>Can i produce custom links?</li>
+								<div>Just open /&ltyourWishId&gt. If you get no redirect, you can enter your URL according to your custom id.</div>
+								<li>How can i inspect an shortened link?</li>
+								<div>Append a plus sign ("+") to your short URL. You'll receive a clickable link to the remote destination.</div>
+								<li>How can my script resolve a shortened link?</li>
+								<div>Take a look at the API.</div>
+							</ul>
+						</div>
+					</a>
+				</span>
 				<span class="infoitem"><a href="https://github.com/Sqozz/schort" target="_blank">github.com</a></span>
 			</div>
 		</div>
