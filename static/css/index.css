@@ -72,6 +72,19 @@ a:hover {
 	text-decoration: underline;
 }
 
+a:hover * {
+	fill: black;
+}
+
+#githubLink {
+       display: flex;
+}
+
+#githubLink svg {
+       margin-right: 5px;
+       fill: rgb(150, 150, 150);
+}
+
 .infoitem {
 	flex: 1;
 	display: flex;
