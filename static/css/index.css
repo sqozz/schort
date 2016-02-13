@@ -105,7 +105,7 @@ a:focus .description {
 	pointer-events: auto;
 }
 
-a:focus {
+a:focus > div {
 	pointer-events: none;
 }
 
