@@ -17,22 +17,24 @@ body {
 
 #url_input {
 	border: 1px solid rgb(200, 200, 200);
-	height: 35px;
+	height: 1.3em;
 	margin: 0px;
 	padding-left: 10px;
 	flex: 1;
+	font-size: 0.7em;
 }
 
 #short_button {
 	border: 1px solid rgb(200, 200, 200);
-	height: 35px;
+	height: 1.9em;
 	margin: 0px;
 	margin-left: 10px;
 	font-family: monospace;
+	font-size: 0.5em;
 }
 
 #short_form {
-	font-size: 30px;
+	font-size: 3em;
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -57,6 +59,7 @@ body {
 }
 
 #infobar {
+	font-size: 1em;
 	display: flex;
 	margin-top: 10px;
 }
@@ -81,8 +84,11 @@ a:hover * {
 }
 
 #githubLink svg {
-       margin-right: 5px;
-       fill: rgb(150, 150, 150);
+	margin-right: 5px;
+	margin-left: 5px;
+	fill: rgb(150, 150, 150);
+	width: 1.2em;
+	height: 1.2em;
 }
 
 .infoitem {
