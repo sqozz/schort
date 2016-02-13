@@ -101,12 +101,12 @@ span .description {
 	display: none;
 	opacity: 0;
 	text-align: left;
-	margin-left: -100px;
+	margin-left: -6%;
 	max-width: 300px;
 	margin-top: 10px;
 	padding: 3px;
 	box-shadow: 3px 3px 10px gray;
-	max-height: 33%;
+	max-height: 35%;
 	overflow-y: auto;
 }
 

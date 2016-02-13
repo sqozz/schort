@@ -21,11 +21,16 @@
 					<a href="">
 						<div class="link">API</div>
 						<div class="description">
-							There is no dedicated API for schort. Just make a POST-request to / with the parameter "url" set to your desired destination. Schort will generate an id for your and gives back the short link in plain text.
-							<br/><br/>
-							If you wish to create a custom URL with your script, you can also set the parameter "wishId". If the requested id is free, schort will print out the short link with your requested id. If not, schort will just generate one and print that one out.
-							<br/><br/>
-							To resolve a link you just have to call the short url appendet by an plus sign ("+"). This makes schort to print out a plain text string of the original URL.
+							<ul>
+								<li>API</li>
+								<div>There is no dedicated API for schort. Just make a POST-request to / with the parameter "url" set to your desired destination. Schort will generate an id for your and gives back the short link in plain text.</div>
+								<br/>
+								<li>Creation of new links</li>
+								<div>If you wish to create a custom URL with your script, you can also set the parameter "wishId". If the requested id is free, schort will print out the short link with your requested id. If not, schort will just generate one and print that one out.</div>
+								<br/>
+								<li>Resolving links</li>
+								<div>To resolve a link you just have to make a GET-request and add the "resolve" parameter. The value of this parameter doesn't matter and gets ignored. This makes schort to print out a plain text string of the original URL.</div>
+							</ul>
 						</div>
 					</a>
 				</span>
