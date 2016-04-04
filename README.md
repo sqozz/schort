@@ -1,4 +1,4 @@
-# schort - It's just is a tiny link shortener
+# schort - It's just a tiny link shortener
 ## Installation instructions:
 1. Clone this repo into e.g. /opt/schort
 2. Create a user and adjust permissions to write at least into /opt/schort/data
