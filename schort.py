@@ -35,18 +35,15 @@ def short(shortLink=""):
 		else:
 			return render_template("index.html", name=shortLink) # Landing page
 	elif request.method == "POST": # Someone submitted a new link to short
-		wishId = request.form["wishId"]
-		longUrl = request.form["url"]
-		if wishId:
-			databaseId = insertIdUnique(wishId, longUrl)
-		else:
-			databaseId = insertIdUnique("", longUrl)
+		longUrl = request.form["url"] # required, accept the exception if the key does not exist
+		wishId = request.form.get("wishId")
+		databaseId = insertIdUnique(longUrl, idToCheck=wishId)
 		return request.url_root + databaseId # Short link in plain text
 
-def insertIdUnique(idToCheck, longUrl):
+def insertIdUnique(longUrl, idToCheck=None):
 	hashUrl = hashlib.sha256(longUrl.encode()).digest()
 	base64Url = base64.urlsafe_b64encode(hashUrl).decode()
-	if len(idToCheck) == 0:
+	if idToCheck == None:
 		idToCheck = base64Url[:4]
 
 	conn = sqlite3.connect("data/links.sqlite")
@@ -67,7 +64,7 @@ def insertIdUnique(idToCheck, longUrl):
 			conn.commit()
 			conn.close()
 			if len(base64Url) - 1 >= len(idToCheck) + 1:
-				databaseId = insertIdUnique(base64Url[:len(idToCheck)+1], longUrl)
+				databaseId = insertIdUnique(longUrl, idToCheck=base64Url[:len(idToCheck)+1])
 			else:
 				print("Can't produce a long enough hash from the new link to be unique. This should never happen")
 				print("Bailing out, you are on your own. Good luck.")
