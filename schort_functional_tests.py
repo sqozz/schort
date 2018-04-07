@@ -26,6 +26,10 @@ class SchortFunctionalTestCase(unittest.TestCase):
 
 	def test_entry_page(self):
 		req = self.assertGetReq(BASE_URL + "/")
+		content = req.text
+		self.assertNotEqual(len(content), 0, msg="Get request content was empty.")
+		self.assertRegex(content, ".*\<html.*", msg="Didn't find an opening <html tag in the response.")
+		self.assertRegex(content, ".*\<div.*", msg="Didn't find any opening <div tag in the response.")
 
 	def test_custom_creation(self):
 		req = self.assertPostReq(BASE_URL + "/", data={"url" : "https://github.com/sqozz/schort", "wishId" : "custom_user_supplied_url"})
