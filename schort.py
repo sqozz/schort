@@ -86,3 +86,5 @@ def initDB():
 if __name__ == '__main__':
 	initDB()
 	app.run(debug=True) # If you call this file directly it will always run in debug mode. THIS IS VERY DANGEROUS!
+
+# vim: noexpandtab:ts=2:sw=2:sts=2
