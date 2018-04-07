@@ -43,7 +43,7 @@ def short(shortLink=""):
 def insertIdUnique(longUrl, idToCheck=None):
 	hashUrl = hashlib.sha256(longUrl.encode()).digest()
 	base64Url = base64.urlsafe_b64encode(hashUrl).decode()
-	if idToCheck == None:
+	if idToCheck == None or idToCheck == "":
 		idToCheck = base64Url[:4]
 
 	conn = sqlite3.connect("data/links.sqlite")
