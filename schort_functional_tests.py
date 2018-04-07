@@ -32,7 +32,11 @@ class SchortFunctionalTestCase(unittest.TestCase):
 		self.assertRegex(content, ".*\<div.*", msg="Didn't find any opening <div tag in the response.")
 
 	def test_custom_creation(self):
+		'''Test user supplied wish-URLs'''
+		wishId = "custom_user_supplied_url"
 		req = self.assertPostReq(BASE_URL + "/", data={"url" : "https://github.com/sqozz/schort", "wishId" : "custom_user_supplied_url"})
+		short_url = req.text
+		self.assertEqual(short_url, BASE_URL + "/" + wishId)
 
 	def test_easy_api(self):
 		'''
