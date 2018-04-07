@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from flask import Flask, render_template, url_for, request, redirect, abort
+from flask import Flask, render_template, url_for, request, redirect, abort, escape
 import sqlite3, random, string, time, hashlib, base64
 from urllib.parse import urlparse
 
@@ -21,10 +21,12 @@ def short(shortLink=""):
 				parsedUrl = urlparse(url)
 				if parsedUrl.scheme == "":
 					url = "http://" + url
+
 				if "resolve" in request.args:
-					return url
+					return escape(url)
 				else:
 					if noauto:
+						url = escape(url)
 						return "<a href=" + url + ">" + url + "</a>"
 					else:
 						return redirect(url, code=301) # Redirect to long URL saved in the database
