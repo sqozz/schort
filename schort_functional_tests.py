@@ -2,12 +2,11 @@
 import os
 import unittest
 import requests
+from urllib import parse
 
 BASE_URL="http://localhost:5000"
 
-class TestCase(unittest.TestCase):
-	pass
-
+class WebTestCase(object):
 	def assertPostReq(self, url, data = {}):
 		req = requests.post(url, data=data)
 		self.assertEqual(req.status_code, 200)
@@ -18,8 +17,13 @@ class TestCase(unittest.TestCase):
 		self.assertEqual(req.status_code, 200)
 		return req
 
+	def assertGetStatusReq(self, expected_status, url, params = {}):
+		req = requests.get(url, params=params, allow_redirects=False)
+		self.assertEqual(req.status_code, expected_status)
+		return req
 
-class SchortBasicTests(TestCase):
+
+class SchortBasicTests(unittest.TestCase, WebTestCase):
 	def test_entry_page(self):
 		"""HTML exists in root page"""
 		req = self.assertGetReq(BASE_URL + "/")
@@ -28,33 +32,70 @@ class SchortBasicTests(TestCase):
 		self.assertRegex(content, ".*\<html.*", msg="Didn't find an opening <html tag in the response.")
 		self.assertRegex(content, ".*\<div.*", msg="Didn't find any opening <div tag in the response.")
 
-class SchortCustomIdTests(TestCase):
-	def test_custom_creation(self):
-		"""Test user supplied wish-URLs"""
-		wishId = "custom_user_supplied_url"
-		req = self.assertPostReq(BASE_URL + "/", data={"url" : "https://github.com/sqozz/schort", "wishId" : "custom_user_supplied_url"})
-		short_url = req.text
-		self.assertEqual(short_url, BASE_URL + "/" + wishId)
-
+class SchortRegressionTests(unittest.TestCase, WebTestCase):
 	def test_empty_wish_id(self):
 		"""Test a request with an empty wish-URL"""
 		req = self.assertPostReq(BASE_URL + "/", data={"url" : "https://github.com/sqozz/schort", "wishId" : ""})
 		short_url = req.text
 		self.assertNotEqual(short_url, BASE_URL + "/", msg="Created short link cannot be equal to the root URL")
 
-class SchortRandomIdTests(TestCase):
-	aquiredId = ""
 
-	def test_default(self):
-		"""Test default usage of schort"""
-		req = self.assertPostReq(BASE_URL + "/", data={"url" : "https://github.com/sqozz/schort", "wishId" : ""})
+class SchortShortLinkCase(object):
+	pass
+	shortID = ""
+	shortDest = ""
+
+	def test_resolve(self):
+		"""Test basic resolving capabilites of schort"""
+		self.assertNotEqual(len(self.shortID), 0)
+		req = self.assertGetStatusReq(301, BASE_URL + "/" + self.shortID)
+		loc = req.headers.get("location")
+		self.assertEqual(loc, self.shortDest)
+
+	def test_resolve_follow(self):
+		"""Test if the requests-lib can follow the redirect"""
+		req = requests.get(BASE_URL + "/" + self.shortID, allow_redirects=True)
+		req.url = self.shortDest
+
+	def test_HTMLresolve(self):
+		"""Test HTML displaying of the shortened URL"""
+		HTML_keyword = "+"
+		req = self.assertGetReq(BASE_URL + "/" + self.shortID + HTML_keyword)
+		self.assertRegex(req.text, "(<a href=)({url})(>)({url})(</a>)".format(url=self.shortDest), msg="Returned HTML does not match the regex")
+
+
+class SchortCustomIdTests(unittest.TestCase, SchortShortLinkCase, WebTestCase):
+	def setUp(self):
+		self.shortID = "custom_user_supplied_url"
+		self.shortDest = "https://github.com/sqozz/schort"
+		self.req = requests.post(BASE_URL + "/", data={"url" : self.shortDest, "wishId" : self.shortID})
+
+	def test_create(self):
+		"""Test short link creation with a custom supplied wish-id"""
+		short_url = self.req.text
+		self.assertEqual(short_url, BASE_URL + "/" + self.shortID)
+
+class SchortRandomIdTests(unittest.TestCase, SchortShortLinkCase, WebTestCase):
+	def setUp(self):
+		"""Set up a short url with a randomly assigned id"""
+		self.shortDest = "https://github.com/sqozz/schort"
+		req = requests.post(BASE_URL + "/", data={"url" : self.shortDest})
+		aquiredId = parse.urlparse(req.text)
+		aquiredId = aquiredId.path.replace("/", "", 1)
+		self.shortID = aquiredId
+
+	def test_create(self):
+		"""Test short link creation with a randomly assigned id"""
+		self.assertNotEqual(len(self.shortID), 0)
+
 
 
 if __name__ == '__main__':
 	suite = unittest.TestSuite()
 	suite.addTests(unittest.TestLoader().loadTestsFromTestCase(SchortBasicTests))
-	suite.addTests(unittest.TestLoader().loadTestsFromTestCase(SchortRandomIdTests))
+	suite.addTests(unittest.TestLoader().loadTestsFromTestCase(SchortRegressionTests))
 	suite.addTests(unittest.TestLoader().loadTestsFromTestCase(SchortCustomIdTests))
+	suite.addTests(unittest.TestLoader().loadTestsFromTestCase(SchortRandomIdTests))
 	unittest.TextTestRunner(verbosity=2).run(suite)
 
 # vim: noexpandtab:ts=2:sw=2:sts=2
