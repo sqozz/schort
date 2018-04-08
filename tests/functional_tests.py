@@ -33,6 +33,7 @@ class SchortBasicTests(unittest.TestCase, WebTestCase):
 		self.assertRegex(content, ".*\<html.*", msg="Didn't find an opening <html tag in the response.")
 		self.assertRegex(content, ".*\<div.*", msg="Didn't find any opening <div tag in the response.")
 
+
 class SchortRegressionTests(unittest.TestCase, WebTestCase):
 	def test_empty_wish_id(self):
 		"""Test a request with an empty wish-URL"""
@@ -52,17 +53,22 @@ class SchortShortLinkCase(object):
 	shortDest = ""
 	req = None
 
-	def test_resolve(self):
-		"""Test basic resolving capabilites of schort"""
+	def test_redirect(self):
+		"""Test basic redirecting capabilites of schort"""
 		self.assertNotEqual(len(self.shortID), 0)
 		req = self.assertGetStatusReq(301, BASE_URL + "/" + self.shortID)
 		loc = req.headers.get("location")
 		self.assertEqual(loc, self.shortDest)
 
-	def test_resolve_follow(self):
+	def test_redirect_follow(self):
 		"""Test if the requests-lib can follow the redirect"""
 		req = requests.get(BASE_URL + "/" + self.shortID, allow_redirects=True)
 		req.url = self.shortDest
+
+	def test_resolve(self):
+		"""Test the resolve parameter"""
+		req = self.assertGetReq(BASE_URL + "/" + self.shortID, params = {"resolve" : ""})
+		self.assertEqual(req.text, self.shortDest)
 
 	def test_HTMLresolve(self):
 		"""Test HTML displaying of the shortened URL"""
@@ -82,6 +88,7 @@ class SchortCustomIdTests(unittest.TestCase, SchortShortLinkCase, WebTestCase):
 		short_url = self.req.text
 		self.assertEqual(short_url, BASE_URL + "/" + self.shortID)
 		self.assertEqual(self.req.status_code, 200)
+
 
 class SchortRandomIdTests(unittest.TestCase, SchortShortLinkCase, WebTestCase):
 	def setUp(self):
