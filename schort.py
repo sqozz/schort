@@ -26,8 +26,9 @@ def short(shortLink=""):
 					return escape(url)
 				else:
 					if noauto:
-						url = escape(url)
-						return "<a href=" + url + ">" + url + "</a>"
+						url = str(escape(url))
+						html = "<a href=" + url + ">" + url + "</a>"
+						return html
 					else:
 						return redirect(url, code=301) # Redirect to long URL saved in the database
 			else:
