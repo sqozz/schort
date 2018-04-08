@@ -9,17 +9,18 @@ BASE_URL="http://localhost:5000"
 class WebTestCase(object):
 	def assertPostReq(self, url, data = {}):
 		req = requests.post(url, data=data)
-		self.assertEqual(req.status_code, 200)
+		self.assertEqual(req.status_code, 200, msg="Post request unsuccessful")
 		return req
 
 	def assertGetReq(self, url, params = {}):
 		req = requests.get(url, params=params)
-		self.assertEqual(req.status_code, 200)
+		self.assertEqual(req.status_code, 200, msg="Get request unsuccessful")
 		return req
 
 	def assertGetStatusReq(self, expected_status, url, params = {}):
 		req = requests.get(url, params=params, allow_redirects=False)
-		self.assertEqual(req.status_code, expected_status)
+		self.assertEqual(req.status_code, expected_status, msg="Returned status code does not match the expected one")
+
 		return req
 
 
@@ -39,11 +40,17 @@ class SchortRegressionTests(unittest.TestCase, WebTestCase):
 		short_url = req.text
 		self.assertNotEqual(short_url, BASE_URL + "/", msg="Created short link cannot be equal to the root URL")
 
+	def test_empty_wish_id(self):
+		"""Test a request with no wishId as all"""
+		req = self.assertPostReq(BASE_URL + "/", data={"url" : "https://github.com/sqozz/schort"})
+		self.assertEqual(req.status_code, 200, msg="Could not handle a request without wishId in the parameter-list")
+
 
 class SchortShortLinkCase(object):
 	pass
 	shortID = ""
 	shortDest = ""
+	req = None
 
 	def test_resolve(self):
 		"""Test basic resolving capabilites of schort"""
@@ -74,20 +81,21 @@ class SchortCustomIdTests(unittest.TestCase, SchortShortLinkCase, WebTestCase):
 		"""Test short link creation with a custom supplied wish-id"""
 		short_url = self.req.text
 		self.assertEqual(short_url, BASE_URL + "/" + self.shortID)
+		self.assertEqual(self.req.status_code, 200)
 
 class SchortRandomIdTests(unittest.TestCase, SchortShortLinkCase, WebTestCase):
 	def setUp(self):
 		"""Set up a short url with a randomly assigned id"""
 		self.shortDest = "https://github.com/sqozz/schort"
-		req = requests.post(BASE_URL + "/", data={"url" : self.shortDest})
-		aquiredId = parse.urlparse(req.text)
+		self.req = requests.post(BASE_URL + "/", data={"url" : self.shortDest})
+		aquiredId = parse.urlparse(self.req.text)
 		aquiredId = aquiredId.path.replace("/", "", 1)
 		self.shortID = aquiredId
 
 	def test_create(self):
 		"""Test short link creation with a randomly assigned id"""
 		self.assertNotEqual(len(self.shortID), 0)
-
+		self.assertEqual(self.req.status_code, 200, msg="Link creation was unsuccessful")
 
 
 if __name__ == '__main__':
