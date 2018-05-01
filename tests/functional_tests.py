@@ -46,6 +46,13 @@ class SchortRegressionTests(unittest.TestCase, WebTestCase):
 		req = self.assertPostReq(BASE_URL + "/", data={"url" : "https://github.com/sqozz/schort"})
 		self.assertEqual(req.status_code, 200, msg="Could not handle a request without wishId in the parameter-list")
 
+	def test_empty_url(self):
+		"""Test an empty user supplied URL"""
+		req = requests.post(BASE_URL + "/", data={"url": ""})
+		self.assertEqual(req.status_code, 400, msg="Could not handle a request with empty url")
+		req = requests.post(BASE_URL + "/", data={})
+		self.assertEqual(req.status_code, 400, msg="Could not handle a request with url at all")
+
 
 class SchortShortLinkCase(object):
 	pass
