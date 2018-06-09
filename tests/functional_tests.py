@@ -17,6 +17,11 @@ class WebTestCase(object):
 		self.assertEqual(req.status_code, 200, msg="Get request unsuccessful")
 		return req
 
+	def assertHeadReq(self, url):
+		req = requests.head(url)
+		self.assertEqual(req.status_code, 301, msg="Head request unsuccessful")
+		return req
+
 	def assertGetStatusReq(self, expected_status, url, params = {}):
 		req = requests.get(url, params=params, allow_redirects=False)
 		self.assertEqual(req.status_code, expected_status, msg="Returned status code does not match the expected one")
@@ -76,6 +81,11 @@ class SchortShortLinkCase(object):
 		"""Test the resolve parameter"""
 		req = self.assertGetReq(BASE_URL + "/" + self.shortID, params = {"resolve" : ""})
 		self.assertEqual(req.text, self.shortDest)
+
+	def test_head_resolve(self):
+		"""Test resolving by using a HEAD request"""
+		req = self.assertHeadReq(BASE_URL + "/" + self.shortID)
+		self.assertEqual(req.headers.get("Location", ""), self.shortDest)
 
 	def test_HTMLresolve(self):
 		"""Test HTML displaying of the shortened URL"""
