@@ -51,7 +51,7 @@ class SchortRegressionTests(unittest.TestCase, WebTestCase):
 		req = requests.post(BASE_URL + "/", data={"url": ""})
 		self.assertEqual(req.status_code, 400, msg="Could not handle a request with empty url")
 		req = requests.post(BASE_URL + "/", data={})
-		self.assertEqual(req.status_code, 400, msg="Could not handle a request with url at all")
+		self.assertEqual(req.status_code, 400, msg="Could not handle a request without a url at all")
 
 
 class SchortShortLinkCase(object):
