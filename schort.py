@@ -36,10 +36,11 @@ def short(shortLink=""):
 		else:
 			return render_template("index.html", name=shortLink) # Landing page
 	elif request.method == "POST": # Someone submitted a new link to short
-		longUrl = request.form["url"] # required, accept the exception if the key does not exist
+		longUrl = request.form.get("url", "")
 		wishId = request.form.get("wishId")
 		if len(longUrl) <= 0:
 			abort(400)
+
 		databaseId = insertIdUnique(longUrl, idToCheck=wishId)
 		return request.url_root + databaseId # Short link in plain text
 
