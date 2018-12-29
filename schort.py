@@ -24,7 +24,7 @@ def short(shortLink=""):
 					else:
 						return redirect(url, code=301) # Redirect to long URL saved in the database
 			else:
-				return render_template("index.html", name=shortLink, message="Enter long URL for "+ request.url_root + shortLink+":", message_type="info") # Custom link page
+				return render_template("index.html", name=shortLink, message="Enter long URL for "+ request.url_root + shortLink+":", message_type="info"), 404 # Custom link page
 		else:
 			return render_template("index.html", name=shortLink) # Landing page
 	elif request.method == "POST": # Someone submitted a new link to short
