@@ -20,7 +20,16 @@ class WebTestCase(object):
 	def assertGetStatusReq(self, expected_status, url, params = {}):
 		req = requests.get(url, params=params, allow_redirects=False)
 		self.assertEqual(req.status_code, expected_status, msg="Returned status code does not match the expected one")
+		return req
 
+	def assertHeadReq(self, url, params = {}):
+		req = requests.head(url, params=params)
+		self.assertEqual(req.status_code, 200, msg="Head request unsuccessful")
+		return req
+
+	def assertHeadStatusReq(self, expected_status, url, params = {}):
+		req = requests.head(url, params=params, allow_redirects=False)
+		self.assertEqual(req.status_code, expected_status, msg="Returned status code does not match the expected one")
 		return req
 
 
@@ -67,9 +76,20 @@ class SchortShortLinkCase(object):
 		loc = req.headers.get("location")
 		self.assertEqual(loc, self.shortDest)
 
+	def test_redirect_head(self):
+		"""Test basic redirecting capability of schort for head requests"""
+		req = self.assertHeadStatusReq(301, BASE_URL + "/" + self.shortID)
+		loc = req.headers.get("location")
+		self.assertEqual(loc, self.shortDest)
+
 	def test_redirect_follow(self):
 		"""Test if the requests-lib can follow the redirect"""
 		req = requests.get(BASE_URL + "/" + self.shortID, allow_redirects=True)
+		req.url = self.shortDest
+
+	def test_redirect_follow_head(self):
+		"""Test if the request lib can follow the redirect in a HEAD request"""
+		req = requests.head(BASE_URL + "/" + self.shortID, allow_redirects=True)
 		req.url = self.shortDest
 
 	def test_resolve(self):
