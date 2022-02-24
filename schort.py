@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
 from flask import Flask, render_template, url_for, request, redirect, abort, escape
 import sqlite3, random, string, time, hashlib, base64
 from urllib.parse import urlparse
