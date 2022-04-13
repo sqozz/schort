@@ -10,20 +10,12 @@ app = Flask(__name__)
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/<shortLink>', methods=['GET', 'POST'])
 def short(shortLink=""):
-	if request.method == "GET":
+	if request.method == "GET" or request.method == "HEAD":
 		if shortLink:
 			noauto = shortLink[-1] == "+"
 			if noauto: shortLink = shortLink[:-1]
-			conn = sqlite3.connect("data/links.sqlite")
-			c = conn.cursor()
-			result = c.execute('SELECT longLink FROM links WHERE shortLink=?', (shortLink, )).fetchone()
-			conn.close()
-			if result:
-				url = result[0]
-				parsedUrl = urlparse(url)
-				if parsedUrl.scheme == "":
-					url = "http://" + url
-
+			url = retrieveUrlFromShortLink(shortLink)
+			if url is not None:
 				if "resolve" in request.args:
 					return escape(url)
 				else:
@@ -34,7 +26,7 @@ def short(shortLink=""):
 					else:
 						return redirect(url, code=301) # Redirect to long URL saved in the database
 			else:
-				return render_template("index.html", name=shortLink, message="Enter long URL for "+ request.url_root + shortLink+":", message_type="info") # Custom link page
+				return render_template("index.html", name=shortLink, message="Enter long URL for "+ request.url_root + shortLink+":", message_type="info"), 404 # Custom link page
 		else:
 			return render_template("index.html", name=shortLink) # Landing page
 	elif request.method == "POST": # Someone submitted a new link to short
@@ -45,6 +37,20 @@ def short(shortLink=""):
 
 		databaseId = insertIdUnique(longUrl, idToCheck=wishId)
 		return request.url_root + databaseId # Short link in plain text
+
+def retrieveUrlFromShortLink(shortLink):
+	conn = sqlite3.connect("data/links.sqlite")
+	c = conn.cursor()
+	result = c.execute ('SELECT longLink FROM links WHERE shortLink=?', (shortLink, )).fetchone()
+	conn.close()
+	if result:
+		url = result[0]
+		parsedUrl = urlparse(url)
+		if parsedUrl.scheme == "":
+			url = "http://" + url
+		return url
+	else:
+		return None
 
 def insertIdUnique(longUrl, idToCheck=None):
 	hashUrl = hashlib.sha256(longUrl.encode()).digest()
