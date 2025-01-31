@@ -75,6 +75,14 @@ class SchortShortLinkCase(object):
 		req = self.assertGetStatusReq(301, BASE_URL + "/" + self.shortID)
 		loc = req.headers.get("location")
 		self.assertEqual(loc, self.shortDest)
+	
+	def test_redirect_with_subpath(self):
+		"""Test basic redirecting capabilites of schort with subpath"""
+		self.assertNotEqual(len(self.shortID), 0)
+		subpath = "/blob/master/templates/index.html"
+		req = self.assertGetStatusReq(301, BASE_URL + "/" + self.shortID + subpath)
+		loc = req.headers.get("location")
+		self.assertEqual(loc, self.shortDest + subpath)
 
 	def test_redirect_head(self):
 		"""Test basic redirecting capability of schort for head requests"""
