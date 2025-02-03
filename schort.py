@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from flask import Flask, render_template, url_for, request, redirect, abort, escape
+from flask import Flask, render_template, url_for, request, redirect, abort
+from markupsafe import escape
 import sqlite3, random, string, time, hashlib, base64
 from urllib.parse import urlparse
 
@@ -9,13 +10,15 @@ app = Flask(__name__)
 
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/<shortLink>', methods=['GET', 'POST'])
-def short(shortLink=""):
+@app.route('/<shortLink>/<path:path>', methods=['GET', 'POST'])
+def short(shortLink="", path=None):
 	if request.method == "GET" or request.method == "HEAD":
 		if shortLink:
 			noauto = shortLink[-1] == "+"
 			if noauto: shortLink = shortLink[:-1]
 			url = retrieveUrlFromShortLink(shortLink)
 			if url is not None:
+				if path: url = url + "/" + path
 				if "resolve" in request.args:
 					return escape(url)
 				else:
