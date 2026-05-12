@@ -1,9 +1,12 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from flask import Flask, render_template, url_for, request, redirect, abort
+from flask import Flask, render_template, request, redirect, abort
 from markupsafe import escape
-import sqlite3, random, string, time, hashlib, base64
+import sqlite3
+import time
+import hashlib
+import base64
 from urllib.parse import urlparse
 
 app = Flask(__name__)
@@ -14,7 +17,8 @@ def short(shortLink=""):
 	if request.method == "GET" or request.method == "HEAD":
 		if shortLink:
 			noauto = shortLink[-1] == "+"
-			if noauto: shortLink = shortLink[:-1]
+			if noauto:
+				shortLink = shortLink[:-1]
 			url = retrieveUrlFromShortLink(shortLink)
 			if url is not None:
 				if "resolve" in request.args:
@@ -56,7 +60,7 @@ def retrieveUrlFromShortLink(shortLink):
 def insertIdUnique(longUrl, idToCheck=None):
 	hashUrl = hashlib.sha256(longUrl.encode()).digest()
 	base64Url = base64.urlsafe_b64encode(hashUrl).decode()
-	if idToCheck == None or idToCheck == "":
+	if idToCheck is None or idToCheck == "":
 		idToCheck = base64Url[:4]
 
 	conn = sqlite3.connect("data/links.sqlite")
@@ -64,7 +68,7 @@ def insertIdUnique(longUrl, idToCheck=None):
 	try:
 		c.execute('INSERT INTO links VALUES (?, ?, ?, ?, ?)', (idToCheck, longUrl, int(time.time()), request.remote_addr, "default" ))
 		databaseId = idToCheck
-	except sqlite3.IntegrityError as e:
+	except sqlite3.IntegrityError:
 		print("Hash already exists, does the long URL matches?")
 		longUrlDb = c.execute('SELECT * FROM links WHERE shortLink=?', (idToCheck, )).fetchone()
 		if longUrl == longUrlDb[1]:

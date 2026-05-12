@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-import os
 import unittest
 import requests
 from urllib import parse
@@ -50,8 +49,8 @@ class SchortRegressionTests(unittest.TestCase, WebTestCase):
 		short_url = req.text
 		self.assertNotEqual(short_url, BASE_URL + "/", msg="Created short link cannot be equal to the root URL")
 
-	def test_empty_wish_id(self):
-		"""Test a request with no wishId as all"""
+	def test_missing_wish_id(self):
+		"""Test a request with no wishId at all"""
 		req = self.assertPostReq(BASE_URL + "/", data={"url" : "https://github.com/sqozz/schort"})
 		self.assertEqual(req.status_code, 200, msg="Could not handle a request without wishId in the parameter-list")
 
