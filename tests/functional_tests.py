@@ -39,8 +39,8 @@ class SchortBasicTests(unittest.TestCase, WebTestCase):
 		req = self.assertGetReq(BASE_URL + "/")
 		content = req.text
 		self.assertNotEqual(len(content), 0, msg="Get request content was empty.")
-		self.assertRegex(content, ".*\<html.*", msg="Didn't find an opening <html tag in the response.")
-		self.assertRegex(content, ".*\<div.*", msg="Didn't find any opening <div tag in the response.")
+		self.assertRegex(content, ".*<html.*", msg="Didn't find an opening <html tag in the response.")
+		self.assertRegex(content, ".*<div.*", msg="Didn't find any opening <div tag in the response.")
 
 
 class SchortRegressionTests(unittest.TestCase, WebTestCase):
