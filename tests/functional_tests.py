@@ -70,7 +70,7 @@ class SchortShortLinkCase(object):
 	req = None
 
 	def test_redirect(self):
-		"""Test basic redirecting capabilites of schort"""
+		"""Test basic redirecting capabilities of schort"""
 		self.assertNotEqual(len(self.shortID), 0)
 		req = self.assertGetStatusReq(301, BASE_URL + "/" + self.shortID)
 		loc = req.headers.get("location")

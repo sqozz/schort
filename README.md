@@ -41,7 +41,7 @@ server {
 
 | Module        | Explanation   |
 | ------------- |---------------|
-| Flask         | Flask handels all HTTP-stuff in this application |
+| Flask         | Flask handles all HTTP-stuff in this application |
 | sqlite3       | In gentoo this useflag needs to be set while compiling python3     |
 
 ## µWSGI
