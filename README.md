@@ -8,14 +8,11 @@
     5. `sudo -u schort git clone https://github.com/sqozz/schort.git /opt/schort`
     6. `sudo chmod 770 /opt/schort/data`
 2. Install requirements:
-    1. `sudo -u schort virtualenv /opt/schort/venv`
-    2. `sudo -u schort -s`
-    3. `source ./venv/bin/activate`
-    4. `pip install -r requirements.txt`
+    1. `sudo -u schort uv sync`
 3. Configure your wsgi or fcgi server:
     1. Check the docs of your preferred server. E.g. gunicorn, uwsgi, fastcgi, …
     2. uwsgi example: `/usr/bin/uwsgi --master --daemonize /dev/null --disable-logging --plugin python39 --wsgi-file /opt/schort/schort.wsgi --post-buffering 1 --enable-threads --socket /tmp/uwsgi_schort.sock --processes 1 --fileserve-mode /opt/schort/schort.wsgi --pidfile /var/run/uwsgi_schort/schort.pid`
-4. Configure your webserver that he talks to your wsgi/fcgi server:
+4. Configure your reverse proxy to serve the wsgi/fcgi application:
     1. Check the docs of your preferred webserver. E.g. nginx, apache, …
     2. nginx example (you should really look into securing your server with https):
 
@@ -37,15 +34,8 @@ server {
 }
 ```
 
-## Requirements:
-
-| Module        | Explanation   |
-| ------------- |---------------|
-| Flask         | Flask handles all HTTP-stuff in this application |
-| sqlite3       | In gentoo this useflag needs to be set while compiling python3     |
-
 ## µWSGI
 
 The schort.wsgi file can be set as UWSGI_PROGRAM if you use uWSGI.
 Keep in mind, that the UWSGI_DIR needs to be set to the path where schort.py resists.
-This is because schort is not installed in a global scope. Since schort.wsgi imports schort.py it needs his workspace in the same folder.
+This is because the wsgi-file cannot import schort.py from your global python installation.
