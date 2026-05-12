@@ -64,8 +64,6 @@ def insertIdUnique(longUrl, idToCheck=None):
 	try:
 		c.execute('INSERT INTO links VALUES (?, ?, ?, ?, ?)', (idToCheck, longUrl, int(time.time()), request.remote_addr, "default" ))
 		databaseId = idToCheck
-		conn.commit()
-		conn.close()
 	except sqlite3.IntegrityError as e:
 		print("Hash already exists, does the long URL matches?")
 		longUrlDb = c.execute('SELECT * FROM links WHERE shortLink=?', (idToCheck, )).fetchone()
@@ -83,6 +81,10 @@ def insertIdUnique(longUrl, idToCheck=None):
 				print("Bailing out, you are on your own. Good luck.")
 				print("=========================================================================================")
 				abort(500)
+	finally:
+		conn.commit()
+		conn.close()
+
 
 	return databaseId
 
